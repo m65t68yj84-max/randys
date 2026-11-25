@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Randy’s Vehicle Locator</title>
+<meta name="description" content="Localizador de fã dos carros da lista do Randy em GTA VI. Não afiliado à Rockstar Games.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Inter:wght@400;600&family=Passion+One:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#12061d;--pn:#1d002e;--ln:#3a1d52;--tx:#f5eefc;--mu:#ab9ec2;--fl:#cc46a0;--or:#813dbb;--du:#4c5fca;--co:#f76685;--am:#ffa948;--c:#e5484d;--s:#3fb950;--n:#8b8b99}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.45 Inter,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+header{display:flex;align-items:center;gap:12px;padding:8px 16px;padding-top:max(8px,env(safe-area-inset-top));background:var(--pn);border-bottom:2px solid var(--fl);z-index:5}
+header svg{width:30px;height:30px;flex:none}
+h1{font:400 26px/1 'Passion One',Impact,sans-serif;letter-spacing:.03em;margin:0;text-transform:uppercase}
+.sub{font:500 11px 'Barlow Condensed',sans-serif;letter-spacing:.18em;color:var(--mu);text-transform:uppercase}
+#cnt{margin-left:auto;text-align:right;font:700 16px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;white-space:nowrap}
+#cnt b{font:700 28px/1 'Passion One',sans-serif;color:var(--am);margin:0 2px}
+main{flex:1;display:flex;min-height:0;position:relative}
+#map{flex:1;position:relative;overflow:hidden;touch-action:none;background:#0a58ad;cursor:grab}
+#w{position:absolute;left:0;top:0;width:827px;height:1140px;transform-origin:0 0}
+#w img{display:block;width:100%;height:100%;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.mk{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;padding:0;border-radius:50%;border:2px solid #fff;background:var(--n);cursor:pointer;transform:scale(var(--k,1))}
+.mk.c{background:var(--c)}.mk.s{background:var(--s)}.mk.A{border-style:dashed}
+.mk.on{box-shadow:0 0 0 5px rgba(204,70,160,.6);z-index:3}.mk.dim{opacity:.4}
+#zc{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+#zc button{width:40px;height:40px;border:0;border-radius:8px;background:rgba(29,0,46,.88);font-size:20px;cursor:pointer}
+#bn{position:absolute;left:10px;right:60px;top:10px;padding:10px 12px;border-radius:8px;background:var(--fl);color:#1d002e;font-weight:600;display:flex;gap:10px;align-items:center;justify-content:space-between}
+#bn[hidden]{display:none}#bn button{border:0;background:#1d002e;color:#fff;border-radius:6px;padding:6px 10px;cursor:pointer}
+aside{width:390px;background:var(--pn);display:flex;flex-direction:column;min-height:0}
+#hd{display:none}
+#ct{display:flex;gap:8px;padding:10px 12px;flex-wrap:wrap}
+#ct input,#ct select{flex:1 1 120px;min-height:40px;padding:6px 10px;background:var(--bg);border:1px solid var(--ln);border-radius:6px}
+#ex{flex:1 1 100%;min-height:36px;border:1px dashed var(--ln);background:none;border-radius:6px;color:var(--mu);cursor:pointer}
+#ls{flex:1;overflow:auto;padding:0 12px 8px;-webkit-overflow-scrolling:touch}
+h2{font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:.14em;color:var(--mu);margin:14px 0 4px;text-transform:uppercase}
+.it{border-bottom:1px solid var(--ln)}
+.it.on{border-left:3px solid var(--fl);padding-left:8px;margin-left:-11px;background:linear-gradient(90deg,rgba(204,70,160,.12),transparent)}
+.h2{display:flex;align-items:center;gap:10px;width:100%;padding:10px 0;background:none;border:0;text-align:left;cursor:pointer;min-height:48px}
+.h2 svg{flex:none;color:var(--or)}.h2 span{flex:1;min-width:0}
+.h2 b{display:block;font:700 19px/1.1 'Barlow Condensed',sans-serif;letter-spacing:.02em}
+.h2 small{color:var(--mu)}.h2 u{text-decoration:none;color:var(--s);font-weight:700}
+.b{display:inline-block;font:700 11px/1 'Barlow Condensed',sans-serif;letter-spacing:.08em;padding:4px 6px;border-radius:3px;background:var(--n);color:#fff;white-space:nowrap}
+.b.c{background:var(--c)}.b.s{background:var(--s);color:#06210d}.b.kF{background:var(--du)}.b.kA{background:var(--or)}.b.kL{background:#5b4a73}
+.fc{padding:0 0 14px}
+.ck{display:flex;align-items:center;gap:10px;font:700 17px 'Barlow Condensed',sans-serif;letter-spacing:.06em;min-height:44px}
+.ck input{width:22px;height:22px;accent-color:var(--fl)}
+.rw{display:flex;align-items:center;gap:10px;margin:4px 0}.rw select{flex:1;min-height:40px;background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:4px 8px}
+.mu{color:var(--mu);font-size:13px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;margin:8px 0}dt{color:var(--mu)}dd{margin:0}
+.lc{margin-top:10px;padding:10px 0 0;border-top:1px solid var(--ln);display:grid;gap:4px}
+.lc a{color:var(--am)}
+.ac{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.ac button{min-height:38px;padding:0 12px;border-radius:6px;border:1px solid var(--or);background:none;cursor:pointer}
+.ac button:first-child{background:var(--or)}
+#ft{padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));border-top:1px solid var(--ln);font-size:12px;color:var(--mu)}
+.lg{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;color:var(--tx)}.lg i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:-1px;background:var(--n)}.lg i.c{background:var(--c)}.lg i.s{background:var(--s)}
+#ft p{margin:4px 0 0}
+@media(max-width:800px){
+h1{font-size:21px}.sub{font-size:9px}
+main{display:block}#map{position:absolute;inset:0}
+aside{position:absolute;left:0;right:0;bottom:0;width:auto;height:52%;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
+aside.min{height:auto}aside.min #ct,aside.min #ls,aside.min #ft{display:none}
+#hd{display:block;width:100%;height:46px;border:0;background:none;font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+#hd::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--ln);margin:0 auto 6px}
+#zc{top:10px}}
+@media(prefers-reduced-motion:no-preference){.it .fc{animation:o .18s ease-out}@keyframes o{from{opacity:0;transform:translateY(-4px)}}}
+</style>
+</head>
+<body>
+<header>
+<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C9.4 2 5 6.6 5 12.4 5 20 16 30 16 30s11-10 11-17.6C27 6.6 22.6 2 16 2z" fill="#cc46a0"/><path d="M8.5 15l3-5.5h9l3 5.5v4h-2v-1.6h-11V19h-2z" fill="#1d002e"/><circle cx="12.3" cy="15.6" r="1.4" fill="#ffa948"/><circle cx="19.7" cy="15.6" r="1.4" fill="#ffa948"/></svg>
+<div><h1>Randy’s Vehicle Locator</h1><div class="sub">Grand Theft Auto VI — Vehicle Intelligence</div></div>
+<div id="cnt"></div>
+</header>
+<main>
+<div id="map">
+<div id="w"><img src="assets/leonida.jpg" width="827" height="1140" alt="Mapa de Leonida"></div>
+<div id="bn" hidden><span></span><button id="bc">Cancelar</button></div>
+<div id="zc"><button id="zi" aria-label="Aproximar">+</button><button id="zo" aria-label="Afastar">−</button><button id="zf" aria-label="Ver mapa inteiro">⤢</button></div>
+</div>
+<aside id="pn">
+<button id="hd">Veículos</button>
+<div id="ct">
+<input id="q" type="search" placeholder="Buscar carro" aria-label="Buscar carro">
+<select id="fl" aria-label="Filtro"><option value="all">Todos</option><option value="fo">Encontrados</option><option value="nf">Não encontrados</option><option value="c">Com rastreador</option><option value="s">Sem rastreador</option><option value="n">Não verificados</option><option value="F">Spawn fixo</option><option value="A">Spawn aleatório</option></select>
+<button id="ex">Copiar posições do mapa (JSON)</button>
+</div>
+<div id="ls"></div>
+<div id="ft">
+<div class="lg"><span><i class="c"></i>com rastreador</span><span><i class="s"></i>sem rastreador</span><span><i></i>não verificado</span><span>borda tracejada: spawn não fixo</span></div>
+<p>Projeto de fã, não afiliado à Rockstar Games. Mapa: imagem enviada pelo autor, sem rótulos nem escala (origem e licença não verificadas), por isso não há distância real. Fontes consultadas em 25/11/2026.</p>
+<p>Um local só aparece no mapa depois de posicionado por quem o viu no jogo. Use “Posicionar” na ficha e depois copie o JSON para gravar as posições no código.</p>
+</div>
+</aside>
+</main>
+<script>
+const $=s=>document.querySelector(s),W=827,H=1140;
+const S={PS:['Push Square','https://www.pushsquare.com/guides/gta-6-randys-wish-list-vehicle-locations'],G8:['Game8','https://game8.co/games/GTA-6/archives/639118'],GB:['GTABase','https://www.gtabase.com/gta-6/map/?feature=vehicle-spawn'],BB:['Beebom','https://beebom.com/gta-6-randys-wishlist-car-locations/'],SK:['Sportskeeda','https://www.sportskeeda.com/gta/gta-6-best-getaway-vehicles'],NC:['Neon Coast','https://neoncoast.org/randys-wish-list'],PK:['GTA6 Pocket','https://gta6pocket.com/en/randys-wish-list/'],ML:['Metaforge','https://metaforge.app/gta-6/gta-6-randys-wish-list-car-locations']};
+const KL={F:'SPAWN FIXO',A:'SPAWN ALEATÓRIO',L:'LOCALIZAÇÃO ALTERNATIVA'},TL={c:'COM RASTREADOR',s:'SEM RASTREADOR',n:'NÃO VERIFICADO'},CL={a:'alta',m:'média',b:'baixa'},SL={F:'Fixo (missão)',A:'Aleatório',M:'Misto'};
+// id, nome, fabricante, grupo(0 lista/1 missão posterior), rastreador(base), spawn, valor, observações, locais [tipo, texto, fonte, confiança]
+const V=[
+{id:'zor',n:'Zorrusso',m:'Granforma',g:0,t:'c',s:'F',v:'$21.225 + bônus de $10.000 (outra fonte: $21.250)',nt:'Missão do capítulo 3 que libera a lista e o Key Cloner.',l:[['F','Garagem do Hathaway Apartments, Ocean Beach','PK','m']]},
+{id:'vit',n:'Vitello',m:'Pegassi',g:0,t:'n',s:'F',v:'$16.640 + bônus de $10.000 (uma fonte, vídeo)',nt:'Garagem mais próxima da casa, à direita de quem olha a entrada.',l:[['F','Villa na Flamingo Pkwy, Waning Sands, a leste de Belville','PS','a']]},
+{id:'fur',n:'Furia',m:'Piccia',g:0,t:'n',s:'F',v:'$30.000 + bônus de $10.000 (uma fonte, vídeo)',nt:'Garagem junto à água; entre pela lateral, não pelo portão.',l:[['F','Mansão na Palladia Ln, Peacock Estates, Peacock Bay','PS','a']]},
+{id:'hel',n:'Gauntlet Hellfire',m:'Bravado',g:0,t:'n',s:'F',nt:'Ferro-velho da M7, no fundo do terreno.',l:[['F','Ferro-velho M7, Galerina St, Hamlet, a leste do Boone Speedway','PS','a']]},
+{id:'inf',n:'Infernus ’96',m:'Pegassi',g:0,t:'c',s:'F',v:'$14.455 (carro levemente danificado, uma fonte)',nt:'As fontes divergem: uma manda remover o rastreador no Pay ’n’ Spray, outra manda manter velocidade alta.',l:[['F','7º andar do estacionamento da Crosstown Police Station, NW 9th St','PS','a']]},
+{id:'win',n:'Windsor Drop',m:'Buckingham',g:0,t:'n',s:'A',nt:'Cupê. Se não aparecer, salve e recarregue.',l:[['A','Status Auto Imports, Caledonia Blvd, Bayside (mais provável)','PS','a'],['L','Casas residenciais de Capri','PS','m'],['L','Y Hotel, Washington Beach','PS','m'],['L','Propriedades em Lake Tallaloko, East Lummox County','PS','m']]},
+{id:'jug',n:'Jugular',m:'Ocelot',g:0,t:'n',s:'A',nt:'Sedã.',l:[['A','Garagem em Belville ao norte do Druthers State Bank (Chastity Ave)','PS','a'],['L','The Vault Night Club, Downtown','PS','m'],['L','Atlantic Ave, Vice Beach','PS','m']]},
+{id:'jub',n:'Jubilee',m:'Buckingham',g:0,t:'c',s:'A',nt:'SUV. Rastreador avançado segundo o painel WAiNK citado por uma fonte.',l:[['A','Entradas de casas caras em Belville','PS','m'],['L','Propriedades das Rialto Islands','PS','m'],['L','Entradas de casas em Starfish Island','PS','m']]},
+{id:'tor',n:'Toros',m:'Pegassi',g:0,t:'c',s:'A',v:'bônus de $7.500 em estado imaculado',nt:'SUV. Rastreador citado por uma fonte.',l:[['A','Pegassi Residences, Bayside Dr, Tequesta Retreat (mais provável)','PS','a'],['L','Paradise Wines Vineyard Bar, North Kelly County','PS','m'],['L','Parte residencial rica de Capri','PS','m']]},
+{id:'gro',n:'Growler',m:'Pfister',g:0,t:'n',s:'A',nt:'A mesma fonte que cita a Fig St põe o carro na Shore Drive por volta das 17h.',l:[['A','Propriedades no norte de Capri','PS','m'],['L','Estacionamentos de vários andares em Vice Beach, como o da Fig St','PS','m'],['L','Shore Drive, Ocean Beach, perto das 17h','PK','b']]},
+{id:'ita',n:'Itali RSX',m:'Grotti',g:0,t:'n',s:'A',nt:'Supercarro.',l:[['A','Propriedades no norte de Capri','PS','m'],['L','Status Auto Imports, Bayside (à venda)','PS','m']]},
+{id:'dub',n:'Dubsta',m:'Benefactor',g:0,t:'n',s:'A',l:[['A','Em frente ao NINE1NINE, NE 7th St, Downtown (mais comum)','PS','a'],['L','Propriedades das Rialto Islands','PS','m'],['L','Mansões de Starfish Island','PS','m']]},
+{id:'bal',n:'Baller ST-D',m:'Gallivanter',g:0,t:'n',s:'A',l:[['A','Gallivanter Baller Showroom, El Joven Blvd, Southside (mais provável)','PS','a'],['L','Propriedades das Rialto Islands','PS','m'],['L','Mansões de Starfish Island','PS','m']]},
+{id:'neo',n:'Neon',m:'Pfister',g:0,t:'n',s:'A',nt:'Elétrico. As fontes discordam muito de local: Capri (duas versões), Vice Beach à noite e Starfish Island aparecem em guias diferentes.',l:[['A','Propriedade ao norte de Belville (mais provável)','PS','m'],['L','Mansões de Peacock Estates','PS','m'],['L','Entrada de casa em Capri, Neon laranja','GB','m'],['L','Estacionamentos públicos de Capri','G8','b'],['L','Perto da praia de Vice City, à noite','BB','b'],['L','Sul de Starfish Island, diante de uma fonte','SK','b']]},
+{id:'coq',n:'Coquette D10',m:'Invetero',g:0,t:'n',s:'A',nt:'Local da missão ainda não documentado pelo Push Square.',l:[['A','Casas ricas de Capri (indicação genérica)','ML','b']]},
+{id:'ban',n:'Banshee',m:'Bravado',g:0,t:'n',s:'A',nt:'Local da missão ainda não documentado pelo Push Square.',l:[['A','Casas ricas de Capri (indicação genérica)','ML','b']]},
+{id:'par',n:'Paragon',m:'Ascot',g:0,t:'c',s:'A',nt:'Outra fonte atribui o mesmo bar ao Growler.',l:[['A','Em frente ao Banana Hole, Shore Drive, Ocean Beach, perto das 18h','PK','b']]},
+{id:'tem',n:'Tempesta',m:'Pegassi',g:0,t:'n',s:'M',nt:'Recompensa por concluir a lista.',l:[['F','Garagem em Balsero, Vice City (recompensa)','PS','m'],['L','NE 3rd Street, evento aleatório com o dono','PK','b']]},
+{id:'mam',n:'Mamba GT ’64',m:'Declasse',g:1,t:'c',s:'F',nt:'Missão ¡Dale Mamba!. A chave está numa tigela atrás do sofá, e há muitos guardas.',l:[['F','Mansão em Leaf Links, Vice Beach','PS','a']]},
+{id:'thr',n:'Thrax',m:'Truffade',g:1,t:'n',s:'F',nt:'Último carro da lista, com dois guardas. Fica diante do Spa Spendido.',l:[['F','Dalton Island Club, sudeste de Leonida (ferry)','PS','a']]}
+];
+V.forEach(v=>v.L=v.l.map((a,i)=>({k:a[0],x:a[1],s:a[2],c:a[3],id:v.id+'.'+i,v})));
+// Posições fixas para todos os visitantes: cole aqui o JSON copiado pelo botão do painel
+const POS={};
+let st={f:{},t:{},p:{}};try{Object.assign(st,JSON.parse(localStorage.getItem('rvl')||'{}'))}catch(e){}
+st.p=Object.assign({},POS,st.p);
+const save=()=>{try{localStorage.setItem('rvl',JSON.stringify(st))}catch(e){}};
+const tr=v=>st.t[v.id]||v.t;
+let sel=null,cal=null,sc=1,tx=0,ty=0,fit=1;
+const mp=$('#map'),wd=$('#w'),pn=$('#pn');
+const vis=()=>innerWidth<=800?mp.clientHeight-pn.offsetHeight:mp.clientHeight;
+const apply=()=>{wd.style.transform=`translate(${tx}px,${ty}px) scale(${sc})`;wd.style.setProperty('--k',1/sc)};
+function fitMap(){const w=mp.clientWidth,h=vis();fit=Math.min(w/W,h/H);sc=fit;tx=(w-W*sc)/2;ty=(h-H*sc)/2;apply()}
+function zoomAt(cx,cy,f){const r=mp.getBoundingClientRect(),px=cx-r.left,py=cy-r.top,ns=Math.min(8,Math.max(fit*.8,sc*f));tx=px-(px-tx)*ns/sc;ty=py-(py-ty)*ns/sc;sc=ns;apply()}
+function centerOn(x,y,s){sc=s;tx=mp.clientWidth/2-x*W*s;ty=vis()/2-y*H*s;apply()}
+const P=new Map();let mv=0,pd=0;
+mp.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;P.set(e.pointerId,[e.clientX,e.clientY]);mv=0;pd=0});
+addEventListener('pointermove',e=>{const o=P.get(e.pointerId);if(!o)return;const n=[e.clientX,e.clientY];
+if(P.size==1){mv+=Math.abs(n[0]-o[0])+Math.abs(n[1]-o[1]);tx+=n[0]-o[0];ty+=n[1]-o[1];apply()}
+P.set(e.pointerId,n);
+if(P.size==2){mv=99;const[a,b]=[...P.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd)zoomAt((a[0]+b[0])/2,(a[1]+b[1])/2,d/pd);pd=d}});
+const up=e=>{P.delete(e.pointerId);pd=0};addEventListener('pointerup',up);addEventListener('pointercancel',up);
+mp.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.2:1/1.2)},{passive:false});
+const ctr=f=>{const r=mp.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+vis()/2,f)};
+$('#zi').onclick=()=>ctr(1.4);$('#zo').onclick=()=>ctr(1/1.4);$('#zf').onclick=fitMap;
+mp.addEventListener('click',e=>{if(!cal||mv>6||e.target.closest('button'))return;const r=mp.getBoundingClientRect(),x=(e.clientX-r.left-tx)/sc/W,y=(e.clientY-r.top-ty)/sc/H;if(x<0||x>1||y<0||y>1)return;st.p[cal]=[+x.toFixed(4),+y.toFixed(4)];cal=null;save();banner();render()});
+function banner(){const b=$('#bn');b.hidden=!cal;if(cal){const l=V.flatMap(v=>v.L).find(l=>l.id==cal);b.firstChild.textContent='Toque no mapa para posicionar: '+l.v.n+' ('+KL[l.k].toLowerCase()+')'}}
+$('#bc').onclick=()=>{cal=null;banner()};
+function startCal(id){cal=id;banner();if(innerWidth<=800)pn.classList.add('min')}
+function focusLoc(id){const p=st.p[id];if(p)centerOn(p[0],p[1],Math.max(sc,2.4));if(innerWidth<=800)pn.classList.add('min')}
+$('#hd').onclick=()=>pn.classList.toggle('min');
+const ok=v=>{const q=$('#q').value.trim().toLowerCase(),f=$('#fl').value;if(q&&!(v.n+' '+v.m).toLowerCase().includes(q))return 0;
+return f=='all'||(f=='fo'&&st.f[v.id])||(f=='nf'&&!st.f[v.id])||((f=='c'||f=='s'||f=='n')&&tr(v)==f)||(f=='F'&&v.s=='F')||(f=='A'&&v.s!='F')};
+const ico='<svg viewBox="0 0 32 16" width="36" height="18" aria-hidden="true"><path d="M2 12V9l3-1 4-5h11l5 5 5 1v3h-2a3 3 0 0 0-6 0H12a3 3 0 0 0-6 0z" fill="currentColor"/></svg>';
+function card(v){const o=sel==v.id,t=tr(v);
+let h=`<div class="it${o?' on':''}"><button class="h2" data-s="${v.id}" aria-expanded="${o}">${ico}<span><b>${v.n}</b><small>${v.m}, ${v.L.length} ${v.L.length>1?'locais':'local'}</small></span><em class="b ${t}" style="font-style:normal">${TL[t]}</em>${st.f[v.id]?'<u>✔</u>':''}</button>`;
+if(o){h+=`<div class="fc"><label class="ck"><input type="checkbox" data-f="${v.id}" ${st.f[v.id]?'checked':''}> ENCONTRADO</label>
+<label class="rw">Rastreador<select data-t="${v.id}">${['n','c','s'].map(k=>`<option value="${k}" ${t==k?'selected':''}>${TL[k]}</option>`).join('')}</select></label>
+<p class="mu">Na base: ${TL[v.t].toLowerCase()}${st.t[v.id]?'. Você marcou outro status.':'.'} ${v.nt||''}</p>
+<dl><dt>Spawn</dt><dd>${SL[v.s]}</dd><dt>Valor</dt><dd>${v.v||'não identificado'}</dd><dt>Registro</dt><dd>não identificado</dd><dt>Remover rastreador</dt><dd>não identificado</dd></dl>`;
+h+=v.L.map(l=>{const p=st.p[l.id];return `<div class="lc"><div><span class="b k${l.k}">${KL[l.k]}</span> <span class="mu">confiança ${CL[l.c]}</span></div><div>${l.x}</div><div class="mu">Fonte: <a href="${S[l.s][1]}" target="_blank" rel="noopener">${S[l.s][0]}</a>, verificada em 25/11/2026. ${p?'Posição definida no mapa.':'Ainda sem posição no mapa.'}</div><div class="ac">${p?`<button data-g="${l.id}">Ver no mapa</button><button data-c="${l.id}">Reposicionar</button><button data-r="${l.id}">Remover</button>`:`<button data-c="${l.id}">Posicionar</button>`}</div></div>`}).join('')+'</div>'}
+return h+'</div>'}
+function render(){const n=V.filter(v=>st.f[v.id]).length;$('#cnt').innerHTML=`ENCONTRADOS<b>${n}</b>/ ${V.length}`;
+const a=V.filter(v=>ok(v)&&!v.g),b=V.filter(v=>ok(v)&&v.g);
+$('#ls').innerHTML=(a.length?'<h2>Lista do Randy</h2>'+a.map(card).join(''):'')+(b.length?'<h2>Missões posteriores</h2>'+b.map(card).join(''):'')||'<p class="mu">Nenhum carro com esse filtro.</p>';
+wd.querySelectorAll('.mk').forEach(m=>m.remove());
+V.forEach(v=>{if(!ok(v))return;v.L.forEach(l=>{const p=st.p[l.id];if(!p)return;const m=document.createElement('button');m.className=`mk ${tr(v)} ${l.k=='F'?'F':'A'}${sel==v.id?' on':''}${st.f[v.id]&&sel!=v.id?' dim':''}`;m.style.left=p[0]*W+'px';m.style.top=p[1]*H+'px';m.title=v.n+', '+KL[l.k].toLowerCase();m.onclick=e=>{e.stopPropagation();pick(v.id,l.id)};wd.append(m)})})}
+function pick(id,loc){sel=sel==id&&!loc?null:id;render();const v=V.find(v=>v.id==id);if(sel){const l=(loc&&v.L.find(l=>l.id==loc))||v.L.find(l=>st.p[l.id]);if(l&&st.p[l.id])centerOn(st.p[l.id][0],st.p[l.id][1],Math.max(sc,2.4));pn.classList.remove('min')}}
+$('#ls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.s)pick(d.s);else if(d.g)focusLoc(d.g);else if(d.c)startCal(d.c);else if(d.r){delete st.p[d.r];save();render()}});
+$('#ls').addEventListener('change',e=>{const d=e.target.dataset,v=V.find(v=>v.id==(d.f||d.t));if(!v)return;if(d.f){st.f[v.id]=e.target.checked;if(!e.target.checked)delete st.f[v.id]}else{if(e.target.value==v.t)delete st.t[v.id];else st.t[v.id]=e.target.value}save();render()});
+$('#q').oninput=$('#fl').onchange=render;
+$('#ex').onclick=async()=>{const j=JSON.stringify(st.p,null,1),b=$('#ex');try{await navigator.clipboard.writeText(j);b.textContent='Copiado'}catch(e){prompt('Copie o JSON:',j)}setTimeout(()=>b.textContent='Copiar posições do mapa (JSON)',1600)};
+render();fitMap();addEventListener('orientationchange',()=>setTimeout(fitMap,300));
+</script>
+</body>
+</html>
